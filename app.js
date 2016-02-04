@@ -6,8 +6,7 @@ var qs = require('querystring');
 var slackWrapi = require('slack-wrapi');
 var fs = require('fs');
 
-var config = JSON.parse(fs.readFileSync(config.json))
-console.log(config.auth_key + "   " + config.GA_UA)
+var config = JSON.parse(fs.readFileSync('config.json'))
 
 var client = new slackWrapi(config.auth_key);
 
