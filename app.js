@@ -95,10 +95,11 @@ app.post('/collect', function(req, res){
 	//cd = custom dimension
 	//cm = custom metric
 	//values line up with index in GA
+
 	var data = {
 		v: 		1,
-		tid: 	config.GA_UA,
 		cid: 	user.id,
+		tid:    config.GA_UA,
 		ds:  	"slack", //data source
 		cs: 	"slack", // campaign source
 		cd1: 	user.id,
@@ -120,14 +121,24 @@ app.post('/collect', function(req, res){
 		el: 	msgText,
 		ev: 	1 
 	};
+
+	var test_data = data;
+	//set test_data to send to the test analytics
+	test_data.tid = config.GA_UA_TEST;
+
 	console.log(JSON.stringify(data));
 	console.log(req.body);
 
 	//Make Post Request	
-	request.post("https://www.google-analytics.com/collect?" + qs.stringify(data), 
-	function(error, resp, body){
+	function postRequest(data){
+		request.post("https://www.google-analytics.com/collect?" + qs.stringify(data), 
+		function(error, resp, body){
 		console.log(error);
-	});
+		});
+	};
+
+	postRequest(data);
+	postRequest(test_data);
 
 	res.send("OK");
 });
