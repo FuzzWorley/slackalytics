@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 //Functions
-function updateUserList(req, res){
+function updateUserList(){
 	client.users.list(function(err, data) {
 	  if (!err) {
 	    var users = data;
@@ -41,6 +41,8 @@ function updateUserList(req, res){
 	});
 };
 
+updateUserList();
+
 setInterval(updateUserList, 360000)
 
 //Routes
@@ -49,8 +51,6 @@ app.get('/', function(req, res){
 });
 
 app.get('/users', function(req, res){
-	updateUserList(req, res);
-	res.send('You just manually updated the user list!')
 });
 
 app.post('/collect', function(req, res){
@@ -132,6 +132,7 @@ app.post('/collect', function(req, res){
 	test_data.tid = env_var.ga_test_key;
 
 	console.log(JSON.stringify(data));
+	console.log(JSON.stringify(test_data));
 	console.log(req.body);
 
 	//Make Post Request	
