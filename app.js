@@ -137,7 +137,7 @@ app.post('/collect', function(req, res){
 		});
 	};
 
-	//postRequest(data);
+	postRequest(data);
 	postRequest(test_data);
 
 	res.send("OK");
