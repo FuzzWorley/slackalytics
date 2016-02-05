@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 //Functions
-function updateEmailList(req, res){
+function updateUserList(req, res){
 	client.users.list(function(err, data) {
 	  if (!err) {
 	    var users = data;
@@ -33,7 +33,7 @@ function updateEmailList(req, res){
 	    users.members.forEach(function(member){ 
 	    		email[member.name] = member.profile.email;
 	    });
-	    fs.writeFile('user_list.json', JSON.stringify(email));
+	    fs.writeFile('user_list.json', JSON.stringify(email), {'flags': 'w+'});
 	    console.log('User list updated.')
 	  } else {
 	  	console.log('Something is not right with me.');
@@ -41,7 +41,7 @@ function updateEmailList(req, res){
 	});
 };
 
-setInterval(updateEmailList, 360000)
+setInterval(updateUserList, 360000)
 
 //Routes
 app.get('/', function(req, res){
@@ -49,7 +49,7 @@ app.get('/', function(req, res){
 });
 
 app.get('/users', function(req, res){
-	updateEmailList(req, res);
+	updateUserList(req, res);
 	res.send('You just manually updated the user list!')
 });
 
