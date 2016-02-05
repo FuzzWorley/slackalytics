@@ -6,9 +6,14 @@ var qs = require('querystring');
 var slackWrapi = require('slack-wrapi');
 var fs = require('fs');
 
-var config = JSON.parse(fs.readFileSync('config.json'))
+//set up heroku environment variables
+var env_var = {
+	ga_key: process.env.GOOGLE_ANALYTICS_UAID,
+	ga_test_key: process.env.GOOGLE_ANALYTICS_UAID_TEST,
+	slack_token: process.env.SLACK_TOKEN
+};
 
-var client = new slackWrapi(config.auth_key);
+var client = new slackWrapi(env_var.slack_token);
 
 //Server Details
 var app = express();
@@ -99,7 +104,7 @@ app.post('/collect', function(req, res){
 	var data = {
 		v: 		1,
 		cid: 	user.id,
-		tid:    config.GA_UA,
+		tid:    env_var.ga_key,
 		ds:  	"slack", //data source
 		cs: 	"slack", // campaign source
 		cd1: 	user.id,
@@ -124,7 +129,7 @@ app.post('/collect', function(req, res){
 
 	var test_data = data;
 	//set test_data to send to the test analytics
-	test_data.tid = config.GA_UA_TEST;
+	test_data.tid = env_var.ga_test_key;
 
 	console.log(JSON.stringify(data));
 	console.log(req.body);
