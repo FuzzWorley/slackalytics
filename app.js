@@ -43,7 +43,7 @@ function updateUserList(){
 
 updateUserList();
 
-setInterval(updateUserList, 360000)
+setInterval(updateUserList, 3600000)
 
 //Routes
 app.get('/', function(req, res){
