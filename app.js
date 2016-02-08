@@ -13,7 +13,7 @@ var env_var = {
 	slack_token: process.env.SLACK_TOKEN
 };
 
-var client = new slackWrapi(env_var.slack_token);
+var client = new slackWrapi(env_var.SLACK_TOKEN);
 
 //Server Details
 var app = express();
@@ -29,12 +29,17 @@ function updateUserList(){
 	client.users.list(function(err, data) {
 	  if (!err) {
 	    var users = data;
-	    var email = {}
-	    users.members.forEach(function(member){ 
-	    		email[member.name] = member.profile.email;
+	    var userlist_hash = {"members": []};
+	    users.members.forEach(function(member){
+	    	userlist_hash["members"].push({
+	    		name: member.name,
+	    		id: member.id,
+	    		email: member.profile.email,
+	    		real_name: member.profile.real_name
+	    	});
 	    });
-	    fs.writeFile('user_list.json', JSON.stringify(email), {'flags': 'w+'});
-	    console.log('User list updated.')
+	    fs.writeFile('user_list.json', JSON.stringify(userlist_hash), {'flags': 'w+'});
+	    console.log('User list updated.');
 	  } else {
 	  	console.log('Something is not right with me.');
 	  };
@@ -43,7 +48,70 @@ function updateUserList(){
 
 updateUserList();
 
-setInterval(updateUserList, 3600000)
+setInterval(updateUserList, 3600000);
+
+function getDate(){
+	var date = new Date();
+  var dd = date.getDate();
+  var mm = date.getMonth()+1; //January is 0!
+
+  var yyyy = date.getFullYear();
+  if(dd<10){
+      dd='0'+dd
+  } 
+  if(mm<10){
+      mm='0'+mm
+  } 
+  var date = parseInt(yyyy+mm+dd);
+  return date;
+}
+
+function getTime(){
+	var time = new Date();
+	var hh = time.getHours();
+	hh < 10 ? hh = "0" + hh : hh;
+	var mm = time.getMinutes();
+	mm < 10 ? mm = "0" + mm : mm;
+	var time = parseInt(""+hh+mm);
+	return time;
+}
+
+function getActivityCount(callbackfn){
+	var user_list = JSON.parse(fs.readFileSync('user_list.json'));
+  var num_users = user_list.members.length;
+	var activity_count = 0;
+	var i = 0;
+	user_list.members.forEach(function(member){
+		client.users.getPresence({user: member.id}, function(err, data){
+			data.presence === "active" ? activity_count += 1 : activity_count += 0;
+			i += 1;
+			if (i == num_users) {
+				callbackfn(activity_count);
+			}
+		});
+	});
+};
+
+var activity_history =  JSON.parse(fs.readFileSync('activity_history.json')) || 
+												{	counts: [] }
+
+function updateActivityHistory(){
+
+	getActivityCount(function(count) {
+
+		activity_history.counts.push({
+			date: getDate(),
+			time: getTime(),
+			active_users: count
+		});
+		fs.writeFile('activity_history.json', JSON.stringify(activity_history), {'flags': 'w+'});
+		console.log(activity_history);
+	});
+}
+
+updateActivityHistory();
+
+setInterval(updateActivityHistory, 3600000);
 
 //Routes
 app.get('/', function(req, res){
