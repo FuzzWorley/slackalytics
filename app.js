@@ -145,16 +145,11 @@ function updateUserList(){
 	client.users.list(function(err, data) {
 	  if (!err) {
 	    var users = data;
-	    var userlist_hash = {"members": []};
-	    users.members.forEach(function(member){
-	    	userlist_hash["members"].push({
-	    		name: member.name,
-	    		id: member.id,
-	    		email: member.profile.email,
-	    		real_name: member.profile.real_name
-	    	});
+	    var email = {}
+	    users.members.forEach(function(member){ 
+	    		email[member.name] = member.profile.email;
 	    });
-	    fs.writeFileSync('user_list.json', JSON.stringify(userlist_hash), {'flags': 'w+'});
+	    fs.writeFileSync('user_list.json', JSON.stringify(email), {'flags': 'w+'});
 	    console.log('User list updated.');
 	  } else {
 	  	console.log('Something is not right with me.');
