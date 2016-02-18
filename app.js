@@ -5,7 +5,7 @@ var request = require('request');
 var qs = require('querystring');
 var slackWrapi = require('slack-wrapi');
 var fs = require('fs');
-//var Analytics = require('analytics-node');
+var Analytics = require('analytics-node');
 
 //set up heroku environment variables
 var env_var = {
@@ -17,7 +17,7 @@ var env_var = {
 
 var client = new slackWrapi(env_var.slack_token);
 
-//var analytics = new Analytics(env_var.segment_key, { flushAt: 1 });
+var analytics = new Analytics(env_var.segment_key, { flushAt: 1 });
 
 //Server Details
 var app = express();
