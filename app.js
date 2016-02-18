@@ -240,7 +240,6 @@ app.post('/collect', function(req, res){
 		cm3: 	exclaCount,
 		cm4: 	elipseCount, 
 		cm5: 	questionMark,
-		cm6:  lurk_count,
 		dh:		teamDomain+".slack.com",
 		dp:		"/"+channel.name,
 		dt:		"Slack Channel: "+channel.name,
