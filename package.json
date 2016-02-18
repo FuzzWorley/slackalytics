@@ -4,10 +4,11 @@
   "description": "Integration with GA to track Slack usage",
   "main": "app.js",
   "dependencies": {
-    "express": "^4.12.3",
+    "analytics-node": "^2.0.1",
     "body-parser": "^1.12.2",
-    "request": "^2.54.0",
+    "express": "^4.12.3",
     "querystring": "^0.2.0",
+    "request": "^2.54.0",
     "slack-wrapi": "^0.1.2"
   },
   "scripts": {
