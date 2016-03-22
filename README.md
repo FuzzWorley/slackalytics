@@ -4,7 +4,7 @@ Slackalytics is a textual analysis bot built in Node.js that allows for deeper c
 
 Created by [Nico Miceli](http://nicomiceli.com) and [Joe Zeoli](http://joezeoli.com)
 
-Customized for RbND and expanded upon by Fuzz Worley and Jeff Donovan.
+Customized for RbND and expanded upon by Fuzz Worley.
 
 
 Change Log
