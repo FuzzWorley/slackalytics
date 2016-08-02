@@ -28,37 +28,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
-//Functions
-
-// function updateUserList(){
-// 	client.users.list(function(err, data) {
-// 	  if (!err) {
-// 	    var users = data;
-// 	    users.members.forEach(function(member){
-// 		    analytics.identify({
-// 		    	userId: member.id,
-// 		    	traits: {
-// 		    		username: member.name,
-// 		    		email: member.profile.email,
-// 		    		first_name: member.profile.first_name,
-// 		    		last_name: member.profile.last_name,
-// 		    		real_name: member.profile.real_name,
-// 		    		skype: member.profile.skype,
-// 		    		phone: member.profile.phone,
-// 		    		is_admin: member.is_admin,
-// 		    		deleted: member.deleted
-// 		    	}
-// 		    });
-// 		  });
-// 	    console.log('User list updated.');
-// 	  } else {
-// 	  	console.log('Something is not right with me.');
-// 	  };
-// 	});
-// };
-
-// setInterval(updateUserList, 3600000);
-
 //Make Post Request	
 function postRequest(data){
 	request.post("https://www.google-analytics.com/collect?" + qs.stringify(data), 
@@ -111,16 +80,6 @@ function getActivityCount(callbackfn){
 	});
 };
 
-// var last_sent_at = 0;
-
-// function sendActiveUser(activity_history){
-// 	var active_users = 0;
-// 	var last_entry = activity_history.counts[activity_history.counts.length -1];
-// 	active_users += last_entry.active_users;
-// 	last_sent_at = last_entry.time;
-// 	return active_users;
-// }	
-
 function updateActivityHistory(){
 	if (fs.existsSync('./activity_history.json')) {
 		var activity_history = JSON.parse(fs.readFileSync('activity_history.json'));
@@ -138,7 +97,6 @@ function updateActivityHistory(){
 		fs.writeFileSync('activity_history.json', JSON.stringify(activity_history), {'flags': 'w+'});
 		console.log(activity_history);
 	});
-	//return sendActiveUser(activity_history);
 }
 
 function updateUserList(){
@@ -158,10 +116,8 @@ function updateUserList(){
 };
 
 updateUserList();
-//updateActivityHistory();
 
 setInterval(updateUserList, 3600000);
-//setInterval(updateActivityHistory, 3600000);
 
 //Routes
 app.get('/', function(req, res){
@@ -228,7 +184,6 @@ app.post('/collect', function(req, res){
 		cd1: 	user.id,
 		cd2: 	channel.name,
 		cd3: 	user.name+"("+user.email+")",
-		//cd4:  ,
 		cd5:  msgText,
 		cm1: 	wordCount,
 		cm2: 	emojiCount,
@@ -258,13 +213,6 @@ app.post('/collect', function(req, res){
 		traits: {
 			username: user.name,
 			email: user.email
-			// first_name: member.profile.first_name,
-			// last_name: member.profile.last_name,
-			// real_name: member.profile.real_name,
-			// skype: member.profile.skype,
-			// phone: member.profile.phone,
-			// is_admin: member.is_admin,
-			// deleted: member.deleted
 		}
 	});
 
